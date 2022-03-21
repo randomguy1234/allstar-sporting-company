@@ -1,0 +1,8 @@
+<ol class="product-list d-flex flex-wrap">
+      {{#each store as |store|}}
+         <li class="p-auto m-auto">{{> store-partial store}}  </li>
+        {{/each}}
+
+        <button type="submit" id="new-store" class="btn new-products-btn"><a class="link" href="/new-store">+ New Store</a></button>
+
+</ol>
