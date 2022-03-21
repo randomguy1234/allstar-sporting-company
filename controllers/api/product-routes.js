@@ -1,12 +1,28 @@
 const router = require("express").Router();
 const sequelize = require("../../config/connection");
-const { Product, Store } = require("../../models");
+const withAuth = require("../../utils/auth");
+//add models request here
+const { Product, User, Rate, Store } = require("../../models");
 
 //add route to get all products, model.findAll
 router.get("/", (req, res) => {
-  Product.findAll()
+  // res.render('new-product');
+  Product.findAll({
+    attributes: [
+      "id",
+      "name",
+      "price",
+      "stock",
+      "store_id",
+      "filename",
+      "description",
+    ],
+  })
     .then((dbProductData) => {
-      res.json(dbProductData);
+      const product = dbProductData.map((product) =>
+        product.get({ plain: true })
+      );
+      res.render("product", { product });
     })
     .catch((err) => {
       console.log(err);
@@ -20,6 +36,15 @@ router.get("/:id", (req, res) => {
     where: {
       id: req.params.id,
     },
+    attributes: [
+      "id",
+      "name",
+      "price",
+      "stock",
+      "store_id",
+      "filename",
+      "description",
+    ],
     include: [
       {
         model: Store,
@@ -28,12 +53,15 @@ router.get("/:id", (req, res) => {
     ],
   })
     .then((dbProductData) => {
+      console.log(dbProductData);
+
+      res.render("edit-product", dbProductData.get({ plain: true }));
+
       //display message if id value has no product
       if (!dbProductData) {
         res.status(404).json({ message: "No product has this id." });
         return;
       }
-      res.json(dbProductData);
     })
     .catch((err) => {
       console.log(err);
@@ -49,7 +77,7 @@ router.post("/", (req, res) => {
     stock: req.body.stock,
     store_id: req.body.store_id,
     filename: req.body.filename,
-    description: req.body.description
+    description: req.body.description,
   })
     .then((dbProductData) => {
       res.json(dbProductData);
