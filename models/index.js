@@ -1,27 +1,40 @@
-const Rate = require("./Rate");
 const Product = require("./Product");
-const Store = require("./Store");
 const User = require("./User");
-
-const sequelize = require("../config/connection");
-const { hasMany } = require("./Rate");
+const Store = require("./Store");
+const Rating = require("./Rating");
 
 // creating model associations
-Store.hasMany(User, {
-  foreignKey: "store_id",
-});
 
 User.belongsTo(Store, {
-  foreignKey: "store_id",
+  foreignKey: "store_id"
 });
 
-Product.belongsTo(Store, {
-  foreignKey: "store_id",
-  onDelete: "Cascade",
+Store.hasMany(User, {
+  foreignKey: "store_id"
 });
 
 Store.hasMany(Product, {
-  foreignKey: "store_id",
+  foreignKey: "store_id"
 });
 
-module.exports = { Store, User, Rate, Product };
+Product.belongsTo(Store, {
+  foreignKey: "store_id"
+});
+
+Rating.belongsTo(Product, {
+  foreignKey: "product_id"
+});
+
+Product.hasOne(Rating, {
+  foreignKey: "product_id"
+});
+
+Rating.belongsTo(Store, {
+  foreignKey: "store_id"
+});
+
+Store.hasMany(Rating, {
+  foreignKey: "store_id"
+});
+
+module.exports = { User, Product, Store, Rating };

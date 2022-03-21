@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/connection");
 
-class Store extends Model {}
+class Store extends Model { }
 
 Store.init(
   {
@@ -9,16 +9,16 @@ Store.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     store_name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
 
     store_location: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
   },
   {
@@ -26,7 +26,7 @@ Store.init(
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: "store",
+    modelName: 'store'
   }
 );
 
