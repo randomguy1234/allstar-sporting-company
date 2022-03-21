@@ -3,7 +3,7 @@ const sequelize = require("../config/connection");
 
 // Creating Products Model
 
-class Product extends Model { }
+class Product extends Model {}
 
 Product.init(
   {
@@ -11,45 +11,48 @@ Product.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
-
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
-
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         isDecimal: true,
-      }
+      },
     },
-
     stock: {
       type: DataTypes.INTEGER,
       defaultValue: 10,
       validate: {
         isNumeric: true,
-      }
+      },
     },
-
     store_id: {
       type: DataTypes.INTEGER,
       references: {
         model: "store",
         key: "id",
-      }
-    }
+      },
+    },
+    filename: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
-
   {
     sequelize,
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: 'product'
+    modelName: "product",
   }
 );
 

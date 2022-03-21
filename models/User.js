@@ -2,7 +2,13 @@ const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/connection");
 const bcrypt = require("bcrypt");
 
-class User extends Model { }
+// create our User model
+class User extends Model {
+  // set up method to run on instance data (per user) to check password
+  checkPassword(loginPw) {
+    return bcrypt.compareSync(loginPw, this.password);
+  }
+}
 
 User.init(
   {
@@ -10,15 +16,11 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
-    first_name: {
+    name: {
       type: DataTypes.STRING,
-      allowNull: false
-    },
-    last_name: {
-      type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
@@ -26,14 +28,14 @@ User.init(
       unique: true,
       validate: {
         isEmail: true,
-      }
+      },
     },
     store_id: {
       type: DataTypes.INTEGER,
       references: {
         model: "store",
         key: "id",
-      }
+      },
     },
     password: {
       type: DataTypes.STRING,
@@ -41,29 +43,29 @@ User.init(
       validate: {
         len: [8],
       },
-    }
+    },
   },
   {
     hooks: {
-      // set up beforeCreate sets the value on the password beofre saving it.
-      // async function allows it to run simultaneously with other functions as a promise
+      // set up beforeCreate lifecycle "hook" functionality
       async beforeCreate(newUserData) {
         newUserData.password = await bcrypt.hash(newUserData.password, 10);
         return newUserData;
       },
-
-      //setup for the beforeUpdate function to encrypt before saving updated password
       async beforeUpdate(updatedUserData) {
-        updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
+        updatedUserData.password = await bcrypt.hash(
+          updatedUserData.password,
+          10
+        );
         return updatedUserData;
-      }
+      },
     },
 
     sequelize,
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: "user"
+    modelName: "user",
   }
 );
 
