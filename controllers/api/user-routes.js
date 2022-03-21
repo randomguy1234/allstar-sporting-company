@@ -86,7 +86,7 @@ router.put("/:id", (req, res) => {
 });
 
 //add route to delete 1, model.destroy
-router.delete("/:id", (req, res) => {
+router.delete("/", (req, res) => {
   User.destroy({
     where: {
       id: req.params.id,
